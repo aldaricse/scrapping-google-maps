@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ScrappingLog {
+  id             BigInt    @id @default(autoincrement())
+  searchQuery    String    @map("search_query") @db.VarChar(100)
+  status         String    @db.VarChar(50) // e.g., "pending", "in_progress", "completed", "failed"
+  processedCount Int?      @map("processed_count")
+  errorMessage   String?   @map("error_message") @db.Text
+  completedAt    DateTime? @map("completed_at") @db.Timestamptz(6)
+  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  Place          Place[]
+
+  @@map("scrapping_logs")
+}
+
+model Place {
+  id             BigInt    @id @default(autoincrement())
+  logId          BigInt    @map("log_id") @db.BigInt // Foreign key to ScrappingLog
+  searchCriteria String    @map("search_criteria") @db.VarChar(100)
+  name           String    @db.VarChar(255)
+  rating         Decimal?  @db.Decimal(2, 1)
+  reviews        Int?
+  category       String?   @db.VarChar(100)
+  thumbnail      String?   @db.Text
+  link           String?   @db.Text
+  address        String?   @db.VarChar(300)
+  phone          String?   @db.VarChar(50)
+  web            String?   @db.VarChar(150)
+  createdAt      DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relación con ScrappingLog
+  scrappingLog ScrappingLog @relation(fields: [logId], references: [id], onDelete: Cascade)
+
+  @@index([logId]) // Índice para mejor rendimiento en consultas
+  @@map("places")
+}
+
+// Example usage for Places:
+
+// Create a new place
+// const newPlace = await prisma.place.create({
+//   data: {
+//     id: 1,
+//     searchCriteria: "restaurants",
+//     name: "Amazing Restaurant",
+//     rating: 4.5,
+//     reviews: 127,
+//     category: "Restaurant",
+//     link: "https://maps.google.com/place123"
+//   }
+// });
+
+// Get all places
+// const allPlaces = await prisma.place.findMany({
+//   orderBy: {
+//     rating: 'desc'
+//   }
+// });
+
+// Get places by search criteria
+// const restaurantPlaces = await prisma.place.findMany({
+//   where: {
+//     searchCriteria: "restaurants"
+//   }
+// });
+
+// Get highly rated places (rating >= 4.0)
+// const topRatedPlaces = await prisma.place.findMany({
+//   where: {
+//     rating: {
+//       gte: 4.0
+//     }
+//   },
+//   orderBy: {
+//     rating: 'desc'
+//   }
+// });
+
+// Get places by category
+// const placesByCategory = await prisma.place.findMany({
+//   where: {
+//     category: {
+//       contains: "Restaurant",
+//       mode: 'insensitive'
+//     }
+//   }
+// });
+
+// Update a place
+// const updatedPlace = await prisma.place.update({
+//   where: {
+//     id: 1
+//   },
+//   data: {
+//     rating: 4.8,
+//     reviews: 150
+//   }
+// });
+
+// Delete a place
+// const deletedPlace = await prisma.place.delete({
+//   where: {
+//     id: 1
+//   }
+// });
+
+// Get places with most reviews
+// const popularPlaces = await prisma.place.findMany({
+//   where: {
+//     reviews: {
+//       not: null
+//     }
+//   },
+//   orderBy: {
+//     reviews: 'desc'
+//   },
+//   take: 10
+// });
+
+// Search places by name
+// const searchResults = await prisma.place.findMany({
+//   where: {
+//     name: {
+//       contains: "coffee",
+//       mode: 'insensitive'
+//     }
+//   }
+// });
+
+// Get average rating by category
+// const avgRatingByCategory = await prisma.place.groupBy({
+//   by: ['category'],
+//   _avg: {
+//     rating: true
+//   },
+//   _count: {
+//     id: true
+//   },
+//   where: {
+//     category: {
+//       not: null
+//     }
+//   }
+// });
+
+// Count places by search criteria
+// const countBySearchCriteria = await prisma.place.groupBy({
+//   by: ['searchCriteria'],
+//   _count: {
+//     id: true
+//   }
+// });
+
+// Get places without links
+// const placesWithoutLinks = await prisma.place.findMany({
+//   where: {
+//     link: null
+//   }
+// });

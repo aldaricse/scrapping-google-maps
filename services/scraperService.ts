@@ -1,18 +1,12 @@
 'use server'
 
-import puppeteer from 'puppeteer';
 import { getRandomDelay } from '@/lib/utils';
 import { createPlace } from './placeService';
 import { Place } from '@/types/places';
+import { launchBrowser } from '@/lib/puppeteer';
 
 export const scraperPlaces = async (logId: number, query: string, maxResults: number = 100) => {
-  const browser = await puppeteer.launch({
-    headless: "shell",
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
+  const browser = await launchBrowser();
 
   const page = await browser.newPage();
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36');
@@ -116,13 +110,7 @@ export const scraperPlaces = async (logId: number, query: string, maxResults: nu
 };
 
 const processPlaceDetail = async (logId: number, place: any, query: string) => {
-  const browser = await puppeteer.launch({
-    headless: "shell",
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-    ],
-  });
+  const browser = await launchBrowser();
 
   let pageDetail = null;
 

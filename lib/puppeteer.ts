@@ -16,7 +16,20 @@ export const launchBrowser = async () => {
 
   const browser = await puppeteerCore.launch({
     headless: "shell",
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      ...chromium.args,
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-extensions',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding'
+    ],
     executablePath,
   });
 

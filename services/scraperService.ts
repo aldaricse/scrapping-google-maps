@@ -9,11 +9,16 @@ export const scraperPlaces = async (logId: number, query: string, maxResults: nu
   const browser = await launchBrowser();
 
   const page = await browser.newPage();
+
+  // Esperar a que la página esté lista antes de navegar
+  await page.setDefaultNavigationTimeout(30000);
+  await page.setDefaultTimeout(30000);
+
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36');
 
   const scrapedLinks = new Set();
   try {
-    await page.goto('https://www.google.com/maps', { waitUntil: 'domcontentloaded' });
+    await page.goto('https://www.google.com/maps', { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.type('input.searchboxinput', query);
     await page.keyboard.press('Enter');
     await new Promise(res => setTimeout(res, getRandomDelay(15, 18)));

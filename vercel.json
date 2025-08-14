@@ -1,6 +1,11 @@
 {
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install",
+  "functions": {
+    "app/api/**/*.js": {
+      "maxDuration": 30
+    }
+  },
   "env": {
     "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
   }

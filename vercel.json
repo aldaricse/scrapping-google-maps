@@ -1,12 +1,10 @@
 {
-  "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install",
   "functions": {
-    "app/api/**/*.js": {
-      "maxDuration": 30
+    "app/api/**/*.{js,ts,jsx,tsx}": {
+      "maxDuration": 60
     }
   },
-  "env": {
-    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
-  }
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "framework": "nextjs"
 }

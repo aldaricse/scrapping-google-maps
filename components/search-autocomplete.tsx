@@ -1,141 +1,98 @@
-"use client"
+import React, { useState, useRef, useEffect } from 'react';
+import { Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-import type React from "react"
-
-import { useState, useRef, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Search } from "lucide-react"
-
-interface AutocompleteProps {
-  value: string
-  onChange: (value: string) => void
-  placeholder?: string
-  disabled?: boolean
-  className?: string
-  data?: string[]
+interface SearchAutocompleteProps {
+  value: string;
+  onChange: (value: string) => void;
+  data: string[];
+  placeholder?: string;
+  disabled?: boolean;
+  className?: string;
 }
 
 export function SearchAutocomplete({
   value,
   onChange,
+  data,
   placeholder,
-  disabled,
-  className,
-  data: SEARCH_SUGGESTIONS = []
-}: AutocompleteProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([])
-  const [highlightedIndex, setHighlightedIndex] = useState(-1)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
+  disabled = false,
+  className
+}: SearchAutocompleteProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [filteredData, setFilteredData] = useState<string[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (value.length > 0) {
-      const filtered = SEARCH_SUGGESTIONS.filter((suggestion) =>
-        suggestion.toLowerCase().includes(value.toLowerCase()),
-      ).slice(0, 8) // Limitar a 8 sugerencias
-      setFilteredSuggestions(filtered)
-      setIsOpen(filtered.length > 0 && value !== filtered[0])
+    if (value.length > 2) {
+      const filtered = data
+        .filter(item => 
+          item.toLowerCase().includes(value.toLowerCase())
+        )
+        .slice(0, 5); // Limit to 5 suggestions
+      setFilteredData(filtered);
+      setIsOpen(filtered.length > 0);
     } else {
-      setFilteredSuggestions([])
-      setIsOpen(false)
+      setFilteredData([]);
+      setIsOpen(false);
     }
-    setHighlightedIndex(-1)
-  }, [value])
+  }, [value, data]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
-  }
+    onChange(e.target.value);
+  };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    onChange(suggestion)
-    setIsOpen(false)
-    inputRef.current?.focus()
-  }
+  const handleSelectItem = (item: string) => {
+    onChange(item);
+    setIsOpen(false);
+    inputRef.current?.blur();
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen) return
-
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault()
-        setHighlightedIndex((prev) => (prev < filteredSuggestions.length - 1 ? prev + 1 : 0))
-        break
-      case "ArrowUp":
-        e.preventDefault()
-        setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : filteredSuggestions.length - 1))
-        break
-      case "Enter":
-        e.preventDefault()
-        if (highlightedIndex >= 0) {
-          handleSuggestionClick(filteredSuggestions[highlightedIndex])
-        }
-        break
-      case "Escape":
-        setIsOpen(false)
-        setHighlightedIndex(-1)
-        break
+    if (e.key === 'Escape') {
+      setIsOpen(false);
+      inputRef.current?.blur();
     }
-  }
-
-  const handleFocus = () => {
-    if (filteredSuggestions.length > 0) {
-      setIsOpen(true)
-    }
-  }
-
-  const handleBlur = (e: React.FocusEvent) => {
-    // Delay closing to allow click on suggestions
-    setTimeout(() => {
-      if (!listRef.current?.contains(e.relatedTarget as Node)) {
-        setIsOpen(false)
-      }
-    }, 150)
-  }
+  };
 
   return (
-    <div className="relative w-full">
+    <div className="relative flex-1">
       <div className="relative">
-        <Input
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <input
           ref={inputRef}
+          type="text"
           value={value}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           placeholder={placeholder}
           disabled={disabled}
-          className={className}
+          className={cn(
+            "w-full pl-10 pr-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500",
+            disabled && "opacity-50 cursor-not-allowed",
+            className
+          )}
         />
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
       </div>
-
-      {isOpen && filteredSuggestions.length > 0 && (
-        <Card
+      
+      {isOpen && filteredData.length > 0 && (
+        <div 
           ref={listRef}
-          className="absolute top-full left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto border shadow-lg dark:bg-gray-800 dark:border-gray-700"
+          className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
         >
-          <div className="py-1">
-            {filteredSuggestions.map((suggestion, index) => (
-              <div
-                key={suggestion}
-                className={`px-3 py-2 cursor-pointer text-sm transition-colors ${index === highlightedIndex
-                  ? "bg-gray-100 dark:bg-gray-700"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-700"
-                  } dark:text-gray-100`}
-                onClick={() => handleSuggestionClick(suggestion)}
-                onMouseEnter={() => setHighlightedIndex(index)}
-              >
-                <div className="flex items-center gap-2">
-                  <Search className="h-3 w-3 text-gray-400 dark:text-gray-500" />
-                  <span>{suggestion}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+          {filteredData.map((item, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => handleSelectItem(item)}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none first:rounded-t-md last:rounded-b-md"
+            >
+              <span className="text-sm text-gray-700 dark:text-gray-300">{item}</span>
+            </button>
+          ))}
+        </div>
       )}
     </div>
-  )
+  );
 }

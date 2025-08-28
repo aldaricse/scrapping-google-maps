@@ -1,0 +1,2 @@
+# Ignore old lock files during build
+pnpm-lock.yaml

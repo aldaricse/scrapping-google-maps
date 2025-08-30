@@ -1,0 +1,27 @@
+{
+  "css.validate": false,
+  "css.customData": [".vscode/css_custom_data.json"],
+  "tailwindCSS.experimental.configFile": {
+    "tailwind.config.ts": "styles/globals.css"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**"
+  ],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.autoClosingBrackets": "languageDefined",
+  "emmet.includeLanguages": {
+    "postcss": "css"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

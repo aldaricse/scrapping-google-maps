@@ -1,9 +1,4 @@
-# Vercel build configuration to handle lockfile mismatch during Tailwind v4 migration
-
-# Ignore the old lockfile to allow fresh dependency resolution
-pnpm-lock.yaml
-
-# Temporary files that might cause build conflicts
+# Vercel ignore - simplified for NPM usage
 .next
 node_modules
 dist

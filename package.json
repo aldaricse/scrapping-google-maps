@@ -7,7 +7,9 @@
     "postinstall": "prisma generate",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "check-tailwind": "node scripts/check-tailwind-v4.js",
+    "prebuild": "npm run check-tailwind"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

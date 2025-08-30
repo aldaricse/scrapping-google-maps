@@ -1,0 +1,42 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Define theme configuration in Tailwind CSS v4",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Theme Configuration",
+          "url": "https://tailwindcss.com/docs/v4-beta#theme-configuration"
+        }
+      ]
+    },
+    {
+      "name": "@import",
+      "description": "Import Tailwind CSS v4 base styles",
+      "references": [
+        {
+          "name": "Tailwind CSS v4 Import",
+          "url": "https://tailwindcss.com/docs/v4-beta"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "--color-*",
+      "description": "Custom color properties for Tailwind CSS v4 theme",
+      "syntax": "hsl(<values>) | rgb(<values>) | <hex-color>"
+    },
+    {
+      "name": "--radius",
+      "description": "Border radius configuration for Tailwind CSS v4",
+      "syntax": "<length>"
+    },
+    {
+      "name": "--animate-*",
+      "description": "Animation configuration for Tailwind CSS v4",
+      "syntax": "<animation-name> <duration> <timing-function>"
+    }
+  ]
+}

@@ -80,12 +80,12 @@
     "@types/react-dom": "^19",
     "postcss": "^8.5",
     "puppeteer": "^24.16.1",
-    "tailwindcss": "^4.1.0",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5"
   },
   "pnpm": {
     "overrides": {
-      "tailwindcss": "^4.1.0"
+      "tailwindcss": "^4.0.0"
     }
   }
 }

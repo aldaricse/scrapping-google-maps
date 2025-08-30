@@ -18,11 +18,12 @@ function checkPackageJson() {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     const tailwindVersion = packageJson.devDependencies?.tailwindcss || packageJson.dependencies?.tailwindcss;
     
-    if (tailwindVersion?.startsWith('^4.')) {
-      console.log('✅ package.json: Tailwind CSS v4 detected');
+    if (tailwindVersion?.startsWith('^4.0') || tailwindVersion?.startsWith('4.0')) {
+      console.log('✅ package.json: Tailwind CSS v4.0 detected');
       return true;
     } else {
-      console.log('❌ package.json: Tailwind CSS v4 not found');
+      console.log('❌ package.json: Tailwind CSS v4.0 not found');
+      console.log(`   Found: ${tailwindVersion || 'none'}`);
       return false;
     }
   } catch (error) {
@@ -95,8 +96,10 @@ function runCompatibilityCheck() {
   
   if (passedChecks === totalChecks) {
     console.log('🎉 All compatibility checks passed! Ready for testing.');
+    console.log('📋 Next: Deploy to Vercel preview and run comprehensive tests.');
   } else {
     console.log('⚠️ Some checks failed. Please review the issues above.');
+    console.log('💡 Tip: Make sure you are using Tailwind CSS v4.0.0 stable.');
   }
   
   return passedChecks === totalChecks;
@@ -104,7 +107,8 @@ function runCompatibilityCheck() {
 
 // Main execution
 if (require.main === module) {
-  runCompatibilityCheck();
+  const success = runCompatibilityCheck();
+  process.exit(success ? 0 : 1);
 }
 
 module.exports = { runCompatibilityCheck };

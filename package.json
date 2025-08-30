@@ -2,6 +2,10 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
     "build": "prisma generate && next build",
     "postinstall": "prisma generate",
@@ -9,7 +13,9 @@
     "lint": "next lint",
     "start": "next start",
     "check-tailwind": "node scripts/check-tailwind-v4.js",
-    "prebuild": "npm run check-tailwind"
+    "prebuild": "npm run check-tailwind",
+    "clean": "rm -rf .next node_modules pnpm-lock.yaml",
+    "fresh-install": "npm run clean && pnpm install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -76,5 +82,10 @@
     "puppeteer": "^24.16.1",
     "tailwindcss": "^4.1.0",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "tailwindcss": "^4.1.0"
+    }
   }
 }

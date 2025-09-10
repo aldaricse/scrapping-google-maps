@@ -5,9 +5,9 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Google Maps Scraper',
+  description: 'Extrae información detallada de negocios locales desde Google Maps.',
+  generator: 'Next.js',
 }
 
 export default function RootLayout({
